@@ -1,0 +1,80 @@
+import pygame
+pygame.init()
+window = pygame.display.set_mode((1080,720))
+pygame.display.set_caption("Legit RPG")
+clock = pygame.time.Clock()
+fps = 30
+# i literally made this in one day so there are a lot of things that can be improved on. if you want to help, try to fix these problems:	
+  # 1) removing duplicate blocks and/or haveing more thn one type of block on the same grid space
+	# 2) adding in a way to switch tile types without closing th program and hard coding item
+	# 3) adding an "undo" button
+	# Thanks!
+	
+# load your tile images here. you can replace this example variable
+grassimg = pygame.image.load("grass.png").convert_alpha()
+
+
+name = raw_input("which map would you like to edit?\n")
+
+try:
+	map = open(name+".txt","r")
+	map.close()
+except:
+	map = open(name+".txt","w")
+	map.close()
+#with open(name+".txt")as f:
+	#mapdata = f.readlines()
+mapdata = []
+for line in open(name+".txt"):
+	line.rstrip('\n')
+	line = line.split()
+	x = float(line[0].replace('[','').replace(',','').replace("'",""))
+	y = float(line[1].replace(',','').replace("'",""))
+	type = line[2].replace(']','').replace("'","")
+	mapdata.append([x,y,type])
+run = True
+
+mapx = 0
+mapy = 0
+while run:
+	window.fill((255,255,255))
+	for item in mapdata:
+		x = item[0]+mapx
+		y = item[1]+mapy
+		type = item[2]
+		
+		# replace "grass" with what your tile is known as ex: "grass" or "tree"
+		if type == "grass":
+			# replace "grassimg" with the loaded image variable of your tile
+			window.blit(grassimg,(x,y))
+		# to add tile types just copy/paste the above statement and go from there
+		
+		
+	lmb,rmb,mmb = pygame.mouse.get_pressed()
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			run = False
+	mousex,mousey = pygame.mouse.get_pos()
+	if mousey < 30:
+		mapy+=8
+	if mousey > 690:
+		mapy-=8
+	if mousex < 30:
+		mapx+=8
+	if mousex > 1050:
+		mapx-=8
+		
+	# replace the word "grass" with the type of tile you want to place. you have to do this every time you want to 
+	# change the tiles you are placing.
+	if lmb == True:
+		mapdata.append([round((mousex-mapx)/32)*32,round((mousey-mapy)/32)*32,"grass"])
+	
+	pygame.draw.rect(window,(200,200,200),(round(mousex/32)*32+round(mapx%8),round(mousey/32)*32-round(mapy%8),32,32))
+	clock.tick(fps)
+	pygame.display.flip()
+map = open(name+".txt","w")
+
+for line in mapdata:
+	print line
+	map.write(str(line)+"\n")
+map.close()
