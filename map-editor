@@ -5,8 +5,7 @@ pygame.display.set_caption("Legit RPG")
 clock = pygame.time.Clock()
 fps = 30
 # i literally made this in one day so there are a lot of things that can be improved on. if you want to help, try to fix these problems:	
-  # 1) removing duplicate blocks and/or haveing more thn one type of block on the same grid space
-	# 2) adding in a way to switch tile types without closing th program and hard coding item
+	# 2) adding in a way to switch tile types without closing the program and hard coding it in
 	# 3) adding an "undo" button
 	# Thanks!
 	
@@ -74,6 +73,21 @@ while run:
 	pygame.draw.rect(window,(200,200,200),(round(mousex/32)*32+round(mapx%8),round(mousey/32)*32-round(mapy%8),32,32))
 	clock.tick(fps)
 	pygame.display.flip()
+
+# fixed the multiple tiles on the same place problem here
+for tile in mapdata:
+	x = tile[0]
+	y = tile[1]
+	type = tile[2]
+	count = 1
+	for tile2 in mapdata:
+		x2 = tile[0]
+		y2 = tile[1]
+		type2 = tile[2]
+		if tile2 == tile:
+			if count ==0:
+				mapdata.remove(tile)
+			count =0
 map = open(name+".txt","w")
 
 for line in mapdata:
