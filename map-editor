@@ -11,6 +11,8 @@ fps = 30
 	# Thanks!
 	
 # load your tile images here. you can replace this example variable
+# make sure your tiles are proportional to 32x32 pixels
+
 grassimg = pygame.image.load("grass.png").convert_alpha()
 
 
